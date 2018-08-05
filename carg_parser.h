@@ -78,8 +78,8 @@ struct Arg_parser
 };
 
 char ap_init(struct Arg_parser *const ap,
-	const int argc, const char *const argv[],
-	const struct ap_Option options[], const char in_order);
+		const int argc, const char *const argv[],
+		const struct ap_Option options[], const char in_order);
 
 void ap_free(struct Arg_parser *const ap);
 

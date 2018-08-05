@@ -44,12 +44,12 @@ static void *ap_resize_buffer(void *buf, const int min_size)
 }
 
 static char push_back_record(struct Arg_parser *const ap,
-	const int code, const char *const argument)
+		const int code, const char *const argument)
 {
 	const int               len = strlen(argument);
 	struct ap_Record        *p;
 	void                    *tmp = ap_resize_buffer(ap->data,
-			(ap->data_size + 1) * sizeof(struct ap_Record));
+					(ap->data_size + 1) * sizeof(struct ap_Record));
 
 	if (!tmp) {
 		return 0;
@@ -102,9 +102,9 @@ static void free_data(struct Arg_parser *const ap)
 }
 
 static char parse_long_option(struct Arg_parser *const ap,
-	const char *const opt, const char *const arg,
-	const struct ap_Option options[],
-	int *const argindp)
+		const char *const opt, const char *const arg,
+		const struct ap_Option options[],
+		int *const argindp)
 {
 	unsigned        len;
 	int             index = -1, i;
@@ -120,7 +120,7 @@ static char parse_long_option(struct Arg_parser *const ap,
 			} else if (index < 0) {
 				index = i;			/* First nonexact match found */
 			} else if ((options[index].code != options[i].code) ||
-				(options[index].has_arg != options[i].has_arg)) {
+					(options[index].has_arg != options[i].has_arg)) {
 				ambig = 1;			/* Second or later nonexact match found */
 			}
 		}
@@ -171,9 +171,9 @@ static char parse_long_option(struct Arg_parser *const ap,
 }
 
 static char parse_short_option(struct Arg_parser *const ap,
-	const char *const opt, const char *const arg,
-	const struct ap_Option options[],
-	int *const argindp)
+		const char *const opt, const char *const arg,
+		const struct ap_Option options[],
+		int *const argindp)
 {
 	int cind = 1;			/* character index in opt */
 
@@ -227,8 +227,8 @@ static char parse_short_option(struct Arg_parser *const ap,
 }
 
 char ap_init(struct Arg_parser *const ap,
-	const int argc, const char *const argv[],
-	const struct ap_Option options[], const char in_order)
+		const int argc, const char *const argv[],
+		const struct ap_Option options[], const char in_order)
 {
 	const char      **non_options = 0;	/* skipped non-options */
 	int             non_options_size = 0;	/* number of skipped non-options */
@@ -269,7 +269,7 @@ char ap_init(struct Arg_parser *const ap,
 		} else {
 			if (!in_order) {
 				void *tmp = ap_resize_buffer(non_options,
-						(non_options_size + 1) * sizeof *non_options);
+								(non_options_size + 1) * sizeof *non_options);
 
 				if (!tmp) {
 					return 0;

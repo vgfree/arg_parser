@@ -40,25 +40,25 @@ void show_help(const char verbose)
 	printf("%s - POSIX/GNU command line argument parser. (C version)\n", Program_name);
 	printf("See the source file 'cmain.c' to learn how to use %s in\n", Program_name);
 	printf("your own programs.\n"
-		"\nUsage: %s [options]\n", invocation_name);
+			"\nUsage: %s [options]\n", invocation_name);
 	printf("\nOptions:\n"
-		"  -h, --help                   display this help and exit\n"
-		"  -V, --version                output version information and exit\n"
-		"  -a, --append                 example of option with no argument\n"
-		"  -b, --block=<arg>            example of option with required argument\n"
-		"  -c, --casual[=<arg>]         example of option with optional argument\n"
-		"  -o <arg>                     example of short only option\n"
-		"      --orphan                 example of long only option\n"
-		"  -q, --quiet                  quiet operation\n"
-		"  -u, --uncaught               example of intentional bug\n"
-		"  -v, --verbose                verbose operation\n");
+			"  -h, --help                   display this help and exit\n"
+			"  -V, --version                output version information and exit\n"
+			"  -a, --append                 example of option with no argument\n"
+			"  -b, --block=<arg>            example of option with required argument\n"
+			"  -c, --casual[=<arg>]         example of option with optional argument\n"
+			"  -o <arg>                     example of short only option\n"
+			"      --orphan                 example of long only option\n"
+			"  -q, --quiet                  quiet operation\n"
+			"  -u, --uncaught               example of intentional bug\n"
+			"  -v, --verbose                verbose operation\n");
 
 	if (verbose) {
 		printf("  -H, --hidden                 example of hidden option (shown with -v -h)\n");
 	}
 
 	printf("\nReport bugs to bug-moe@gnu.org\n"
-		"Arg_parser home page: http://www.nongnu.org/arg-parser/arg_parser.html\n");
+			"Arg_parser home page: http://www.nongnu.org/arg-parser/arg_parser.html\n");
 }
 
 void show_version()
@@ -66,8 +66,8 @@ void show_version()
 	printf("%s %s\n", Program_name, PROGVERSION);
 	printf("Copyright (C) %s Antonio Diaz Diaz.\n", program_year);
 	printf("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n"
-		"This is free software: you are free to change and redistribute it.\n"
-		"There is NO WARRANTY, to the extent permitted by law.\n");
+			"This is free software: you are free to change and redistribute it.\n"
+			"There is NO WARRANTY, to the extent permitted by law.\n");
 }
 
 void show_error(const char *const msg, const int errcode, const char help)
@@ -84,7 +84,7 @@ void show_error(const char *const msg, const int errcode, const char help)
 
 	if (help) {
 		fprintf(stderr, "Try '%s --help' for more information.\n",
-			invocation_name);
+				invocation_name);
 	}
 }
 
