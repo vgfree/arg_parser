@@ -1,29 +1,20 @@
 /*  Arg_parser - POSIX/GNU command line argument parser. (C version)
- *   Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013
- *   Antonio Diaz Diaz.
+ *    Copyright (C) 2006-2017 Antonio Diaz Diaz.
  *
- *   This library is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ *    This library is free software. Redistribution and use in source and
+ *    binary forms, with or without modification, are permitted provided
+ *    that the following conditions are met:
  *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ *    1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ *    2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- *   As a special exception, you may use this file as part of a free
- *   software library without restriction.  Specifically, if other files
- *   instantiate templates or use macros or inline functions from this
- *   file, or you compile this file and link it with other files to
- *   produce an executable, this file does not by itself cause the
- *   resulting executable to be covered by the GNU General Public
- *   License.  This exception does not however invalidate any other
- *   reasons why the executable file might be covered by the GNU General
- *   Public License.
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
 #include <stdlib.h>
@@ -118,10 +109,10 @@ static char parse_long_option(struct Arg_parser *const ap,
 			if (strlen(options[i].name) == len) {	/* Exact match found */
 				index = i; exact = 1; break;
 			} else if (index < 0) {
-				index = i;			/* First nonexact match found */
+				index = i;	/* First nonexact match found */
 			} else if ((options[index].code != options[i].code) ||
 					(options[index].has_arg != options[i].has_arg)) {
-				ambig = 1;			/* Second or later nonexact match found */
+				ambig = 1;	/* Second or later nonexact match found */
 			}
 		}
 	}
@@ -132,7 +123,7 @@ static char parse_long_option(struct Arg_parser *const ap,
 		return 1;
 	}
 
-	if (index < 0) {		/* nothing found */
+	if (index < 0) {	/* nothing found */
 		add_error(ap, "unrecognized option '"); add_error(ap, opt);
 		add_error(ap, "'");
 		return 1;
@@ -140,7 +131,7 @@ static char parse_long_option(struct Arg_parser *const ap,
 
 	++*argindp;
 
-	if (opt[len + 2]) {			/* '--<long_option>=<argument>' syntax */
+	if (opt[len + 2]) {	/* '--<long_option>=<argument>' syntax */
 		if (options[index].has_arg == ap_no) {
 			add_error(ap, "option '--"); add_error(ap, options[index].name);
 			add_error(ap, "' doesn't allow an argument");
@@ -175,7 +166,7 @@ static char parse_short_option(struct Arg_parser *const ap,
 		const struct ap_Option options[],
 		int *const argindp)
 {
-	int cind = 1;			/* character index in opt */
+	int cind = 1;		/* character index in opt */
 
 	while (cind > 0) {
 		int                     index = -1, i;
@@ -192,13 +183,14 @@ static char parse_short_option(struct Arg_parser *const ap,
 		}
 
 		if (index < 0) {
-			add_error(ap, "invalid option -- "); add_error(ap, code_str);
+			add_error(ap, "invalid option -- '"); add_error(ap, code_str);
+			add_error(ap, "'");
 			return 1;
 		}
 
 		if (opt[++cind] == 0) {
 			++*argindp; cind = 0;
-		}									/* opt finished */
+		}					/* opt finished */
 
 		if ((options[index].has_arg != ap_no) && (cind > 0) && opt[cind]) {
 			if (!push_back_record(ap, code, &opt[cind])) {
@@ -208,8 +200,8 @@ static char parse_short_option(struct Arg_parser *const ap,
 			++*argindp; cind = 0;
 		} else if (options[index].has_arg == ap_yes) {
 			if (!arg || !arg[0]) {
-				add_error(ap, "option requires an argument -- ");
-				add_error(ap, code_str);
+				add_error(ap, "option requires an argument -- '");
+				add_error(ap, code_str); add_error(ap, "'");
 				return 1;
 			}
 
@@ -246,7 +238,7 @@ char ap_init(struct Arg_parser *const ap,
 
 	while (argind < argc) {
 		const unsigned char     ch1 = argv[argind][0];
-		const unsigned char     ch2 = (ch1 ? argv[argind][1] : 0);
+		const unsigned char     ch2 = ch1 ? argv[argind][1] : 0;
 
 		if ((ch1 == '-') && ch2) {	/* we found an option */
 			const char *const       opt = argv[argind];
@@ -255,7 +247,7 @@ char ap_init(struct Arg_parser *const ap,
 			if (ch2 == '-') {
 				if (!argv[argind][2]) {
 					++argind; break;
-				}						/* we found "--" */
+				}			/* we found "--" */
 				else if (!parse_long_option(ap, opt, arg, options, &argind)) {
 					return 0;
 				}
@@ -267,7 +259,11 @@ char ap_init(struct Arg_parser *const ap,
 				break;
 			}
 		} else {
-			if (!in_order) {
+			if (in_order) {
+				if (!push_back_record(ap, 0, argv[argind++])) {
+					return 0;
+				}
+			} else {
 				void *tmp = ap_resize_buffer(non_options,
 								(non_options_size + 1) * sizeof *non_options);
 
@@ -277,8 +273,6 @@ char ap_init(struct Arg_parser *const ap,
 
 				non_options = (const char **)tmp;
 				non_options[non_options_size++] = argv[argind++];
-			} else if (!push_back_record(ap, 0, argv[argind++])) {
-				return 0;
 			}
 		}
 	}
